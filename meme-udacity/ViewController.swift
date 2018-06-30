@@ -84,7 +84,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let controller = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: nil)
         controller.completionWithItemsHandler = {
             (type, completed, items, error) in
-            self.saveMemeToStruct()
+            if (completed) {
+                self.saveMemeToStruct()
+            }
         }
         self.present(controller, animated: true, completion: nil)
     }

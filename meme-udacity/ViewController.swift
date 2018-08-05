@@ -20,13 +20,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var shareButton: UIBarButtonItem!
     @IBOutlet weak var bottomToolbar: UIToolbar!
     
-    struct Meme {
-        let topText: String
-        let bottomText: String
-        let originalImage: UIImage
-        let memeImage: UIImage
-    }
-    
     var textSave = "";
     var isBottomField = false
     
@@ -49,6 +42,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // MARK: - Helper Methods
+    
+    func closeModal() {
+        dismiss(animated: true, completion: nil)
+    }
     
     func reset() {
         setTextField(field: textTop, str: "TOP")
@@ -85,14 +82,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         controller.completionWithItemsHandler = {
             (type, completed, items, error) in
             if (completed) {
-                self.saveMemeToStruct()
+                MemeHelper().saveMeme(top: self.textTop.text!, bottom: self.textBottom.text!, image: self.generateMemedImage())
+                self.closeModal();
             }
         }
         self.present(controller, animated: true, completion: nil)
-    }
-    
-    func saveMemeToStruct() {
-        let meme = Meme(topText: textTop.text!, bottomText: textBottom.text!, originalImage: imagePickerView.image!, memeImage: generateMemedImage())
     }
     
     func generateMemedImage() -> UIImage {
@@ -117,6 +111,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let alert = UIAlertController(title: "Are you sure?", message: "Do you really want to destroy the current meme?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {(alert: UIAlertAction!) in self.reset()}))
         alert.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Back to Overview", style: .default, handler: {(alert: UIAlertAction!) in self.closeModal()}));
         present(alert, animated: true, completion: nil)
     }
     
